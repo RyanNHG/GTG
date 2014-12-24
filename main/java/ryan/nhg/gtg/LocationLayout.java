@@ -56,7 +56,7 @@ public class LocationLayout extends LinearLayout implements Layout
             if(i%2==0)color = R.color.uiuc_orange;
             else color = R.color.uiuc_blue;
 
-            busStopList.addCard(color,"Illini Union",i + " mi", "id:"+i);
+            busStopList.addCard(color,"Illini Union",i + " mi", "id:"+i,(i%4==0));
         }
 
     }

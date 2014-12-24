@@ -24,6 +24,7 @@ public class MainActivity extends Activity
                                 LAYOUT_RECENT = 2,
                                 LAYOUT_FAVORITE = 3;
     private LinearLayout[] layouts;
+    private LinearLayout layout_main;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -38,10 +39,28 @@ public class MainActivity extends Activity
     //  LAYOUTS
     private void initLayouts()
     {
+        layout_main = (LinearLayout)findViewById(R.id.layout_main);
+
         layouts = new LinearLayout[4];
         layouts[LAYOUT_LOCATION] = new LocationLayout(this);
+        layouts[LAYOUT_SEARCH] = new SearchLayout(this);
     }
 
+    private void openLayout()
+    {
+        if(currentTab == R.id.tab_search)
+            layout_main.addView(layouts[LAYOUT_SEARCH]);
+        else
+            layout_main.addView(layouts[LAYOUT_LOCATION]);
+    }
+
+    private void closeLayout()
+    {
+        if(currentTab == R.id.tab_search)
+            layout_main.removeView(layouts[LAYOUT_SEARCH]);
+        else
+            layout_main.removeView(layouts[LAYOUT_LOCATION]);
+    }
 
     //  TABS
 
@@ -49,10 +68,6 @@ public class MainActivity extends Activity
     {
         currentTab = INITIAL_TAB;
         selectTab();
-
-        //  DELETE ME!!!
-        LinearLayout layout_main = (LinearLayout)findViewById(R.id.layout_main);
-        layout_main.addView(layouts[LAYOUT_LOCATION]);
     }
 
     public void tabClicked(View view)
@@ -79,7 +94,7 @@ public class MainActivity extends Activity
         tab.setBackground(getResources().getDrawable(R.color.button_material_dark));
 
         //  Change visible layout
-        //  openLayout();
+        openLayout();
     }
 
     private void deselectTab()
@@ -91,7 +106,7 @@ public class MainActivity extends Activity
         tab.setBackground(getResources().getDrawable(R.color.button_material_light));
 
         //  Change visible layout
-        //  closeLayout();
+        closeLayout();
 
     }
 

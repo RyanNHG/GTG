@@ -68,11 +68,11 @@ public class BusStopList extends ScrollView
 
     }
 
-    public void addCard(int colorId, String stopName, String distance, String stopId)
+    public void addCard(int colorId, String stopName, String distance, String stopId, boolean favorite)
     {
         if(num_stops > 0)
             list.addView(new Space(context));
-        busStops.add(num_stops, new BusStopCard(context, colorId, stopName, distance, stopId));
+        busStops.add(num_stops, new BusStopCard(context, colorId, stopName, distance, stopId ,favorite));
         list.addView(busStops.get(num_stops));
 
         num_stops++;
@@ -87,5 +87,10 @@ public class BusStopList extends ScrollView
                 busStops.remove(card);
                 num_stops--;
             }
+    }
+    public void removeAll()
+    {
+        list.removeAllViews();
+        initBusStopCards();
     }
 }
