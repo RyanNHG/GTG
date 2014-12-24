@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="card_bg_color">#FFFFFF</color>
+    <color name="uiuc_orange">#F47F24</color>
+    <color name="uiuc_blue">#003C7D</color>
+</resources>
