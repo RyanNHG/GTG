@@ -14,10 +14,6 @@ import java.util.PriorityQueue;
 public class MainActivity extends Activity
 {
 
-    //  TABS
-    private static final int INITIAL_TAB = R.id.tab_location;
-    private int currentTab;
-
     //  LAYOUTS
     private static final int    LAYOUT_LOCATION = 0,
                                 LAYOUT_SEARCH = 1,
@@ -26,6 +22,14 @@ public class MainActivity extends Activity
     private LinearLayout[] layouts;
     private LinearLayout layout_main;
 
+    //  LOCATION
+    private LocationGrabber locationGrabber;
+
+    //  TABS
+    private static final int INITIAL_TAB = R.id.tab_location;
+    private int currentTab;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -33,6 +37,7 @@ public class MainActivity extends Activity
         setContentView(R.layout.activity_main);
 
         initLayouts();
+        //initLocation();
         initTabs();
     }
 
@@ -44,22 +49,49 @@ public class MainActivity extends Activity
         layouts = new LinearLayout[4];
         layouts[LAYOUT_LOCATION] = new LocationLayout(this);
         layouts[LAYOUT_SEARCH] = new SearchLayout(this);
+        layouts[LAYOUT_RECENT] = new RecentLayout(this);
+        layouts[LAYOUT_FAVORITE] = new FavoriteLayout(this);
     }
 
     private void openLayout()
     {
+        LinearLayout layout;
+
         if(currentTab == R.id.tab_search)
-            layout_main.addView(layouts[LAYOUT_SEARCH]);
+            layout=layouts[LAYOUT_SEARCH];
+        else if(currentTab == R.id.tab_recent)
+            layout=layouts[LAYOUT_RECENT];
+        else if(currentTab == R.id.tab_favorite)
+            layout=layouts[LAYOUT_FAVORITE];
         else
-            layout_main.addView(layouts[LAYOUT_LOCATION]);
+            layout=layouts[LAYOUT_LOCATION];
+
+        layout_main.addView(layout);
+        ((Layout)layout).open();
     }
 
     private void closeLayout()
     {
+        LinearLayout layout;
+
         if(currentTab == R.id.tab_search)
-            layout_main.removeView(layouts[LAYOUT_SEARCH]);
+            layout=layouts[LAYOUT_SEARCH];
+        else if(currentTab == R.id.tab_recent)
+            layout=layouts[LAYOUT_RECENT];
+        else if(currentTab == R.id.tab_favorite)
+            layout=layouts[LAYOUT_FAVORITE];
         else
-            layout_main.removeView(layouts[LAYOUT_LOCATION]);
+            layout=layouts[LAYOUT_LOCATION];
+
+        layout_main.removeView(layout);
+        ((Layout)layout).close();
+    }
+
+    //  LOCATION
+
+    private void initLocation()
+    {
+        locationGrabber = new LocationGrabber(this,(LocationLayout)layouts[LAYOUT_LOCATION]);
     }
 
     //  TABS
@@ -110,5 +142,19 @@ public class MainActivity extends Activity
 
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if(locationGrabber!=null)
+            locationGrabber.stopLocationManager();
+        Global.saveStops(this);
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(locationGrabber!=null)
+            locationGrabber.startLocationManager();
+        Global.loadStops(this);
+    }
 }

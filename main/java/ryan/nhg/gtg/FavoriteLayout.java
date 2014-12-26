@@ -3,13 +3,11 @@ package ryan.nhg.gtg;
 import android.content.Context;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
-import android.widget.Toast;
 
 /**
  * Created by ryan on 12/24/14.
  */
-public class LocationLayout extends LinearLayout implements Layout
+public class FavoriteLayout extends LinearLayout implements Layout
 {
     //  CONTEXT
     private Context context;
@@ -17,7 +15,7 @@ public class LocationLayout extends LinearLayout implements Layout
     //  LAYOUTS
     private BusStopList busStopList;
 
-    public LocationLayout(Context context)
+    public FavoriteLayout(Context context)
     {
         super(context);
 
@@ -30,8 +28,8 @@ public class LocationLayout extends LinearLayout implements Layout
     private void setProperties()
     {
         LinearLayout.LayoutParams params = new LayoutParams(
-                             ViewGroup.LayoutParams.MATCH_PARENT,
-                             ViewGroup.LayoutParams.MATCH_PARENT);
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT);
         this.setLayoutParams(params);
         this.setOrientation(LinearLayout.VERTICAL);
     }
@@ -47,13 +45,16 @@ public class LocationLayout extends LinearLayout implements Layout
 
     private void getBusStops()
     {
-        //  USE GPS LAT AND LON TO GET BUS STOPS NEAR PERSON
-        new DataGrabber(busStopList).execute(""+DataGrabber.GET_LOCATION_BUS_STOPS,""+Global.latitude,""+Global.longitude);
-    }
+        BusStop[] stops = Global.getFavoriteStops();
 
-    public void locationReady()
-    {
-        getBusStops();
+        //  TO-DO: Add card that tells user how to add favorites.
+        if(stops==null || stops.length < 1) return;
+
+        for(int i = 0; i < stops.length; i++)
+        {
+            if(stops[i] == null) return;
+            busStopList.addCard(stops[i].stopName,"",stops[i].stopId,Global.isInFavorites(stops[i].stopId));
+        }
     }
 
     public void close()
@@ -63,7 +64,8 @@ public class LocationLayout extends LinearLayout implements Layout
 
     public void open()
     {
-        //  CHECK IF FAVORITES HAVE CHANGED
-        busStopList.refreshFavorites();
+        busStopList.removeAll();
+        getBusStops();
     }
 }
+

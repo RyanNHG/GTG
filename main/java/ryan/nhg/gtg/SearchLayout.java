@@ -8,6 +8,9 @@ import android.widget.ScrollView;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
  * Created by ryan on 12/24/14.
  */
@@ -62,17 +65,19 @@ public class SearchLayout extends LinearLayout implements Layout
                 ViewGroup.LayoutParams.WRAP_CONTENT));
         searchbar.setBackground(getResources().getDrawable(R.color.card_bg_color));
         searchbar.setQueryHint(getResources().getString(R.string.query_tooltip));
-        searchbar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        searchbar.setIconified(false);
 
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                clearBusStops();
-                getBusStops(query);
+        searchbar.setOnQueryTextListener(new SearchView.OnQueryTextListener()
+        {
+            public boolean onQueryTextSubmit(String query)
+            {
+                searchbar.clearFocus();
                 return false;
             }
 
-            @Override
-            public boolean onQueryTextChange(String newText) {
+            public boolean onQueryTextChange(String query)
+            {
+                getQuickBusStops(query);
                 return false;
             }
         });
@@ -81,23 +86,13 @@ public class SearchLayout extends LinearLayout implements Layout
     private void getBusStops(String str)
     {
         //  USE SEARCHBAR TEXT TO GET BUS STOPS
-        for(int i = 0; i < 10; i++)
-        {
-            int color;
-
-            if(i%2==0)color = R.color.uiuc_orange;
-            else color = R.color.uiuc_blue;
-
-            busStopList.addCard(color,str,i + " mi", "id:"+i,(i%3==0));
-        }
-
+        new DataGrabber(busStopList).execute("" + DataGrabber.GET_SEARCH_BUS_STOPS, str);
     }
 
-    private void clearBusStops()
+    private void getQuickBusStops(String str)
     {
-        busStopList.removeAll();
+        new DataGrabber(busStopList).execute(""+DataGrabber.GET_QUICK_SEARCH_BUS_STOPS,str);
     }
-
 
     public void close()
     {
@@ -106,6 +101,7 @@ public class SearchLayout extends LinearLayout implements Layout
 
     public void open()
     {
-
+        //  CHECK IF FAVORITES HAVE CHANGED
+        busStopList.refreshFavorites();
     }
 }

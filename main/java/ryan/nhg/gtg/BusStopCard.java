@@ -25,7 +25,7 @@ public class BusStopCard extends RelativeLayout
 
     //  VALUES
     private String stopId;
-    private boolean favorite;
+    private boolean favorite, clickIgnore;
 
     public BusStopCard(Context context, int colorId, String stopName, String distance, String stopId, boolean favorite)
     {
@@ -34,9 +34,11 @@ public class BusStopCard extends RelativeLayout
         this.context = context;
         this.stopId = stopId;
         this.favorite = favorite;
+        this.clickIgnore = false;
 
         setProperties();
         initViews(colorId,stopName,distance);
+        initOnClick();
 
     }
 
@@ -50,13 +52,6 @@ public class BusStopCard extends RelativeLayout
 
         //  Set color and elevation
         this.setBackground(getResources().getDrawable(R.color.card_bg_color));
-        this.setOnLongClickListener(new OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                toggleFavorite();
-                return false;
-            }
-        });
 
     }
 
@@ -115,7 +110,7 @@ public class BusStopCard extends RelativeLayout
         setFavoriteIcon();
     }
 
-        private void setFavoriteIcon()
+        public void setFavoriteIcon()
         {
             if(favorite) favoriteImageView.setImageDrawable(getResources().getDrawable(R.drawable.icon_favorite_light_gray));
             else favoriteImageView.setImageDrawable(getResources().getDrawable(R.drawable.icon_unfavorite_light_gray));
@@ -154,6 +149,28 @@ public class BusStopCard extends RelativeLayout
         distanceTextView.setText(distance);
     }
 
+    private void initOnClick()
+    {
+        this.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(clickIgnore)
+                    clickIgnore = false;
+                else if(stopId != null)
+                    Global.addRecentStop(stopId,stopNameTextView.getText().toString());
+            }
+        });
+
+        this.setOnLongClickListener(new OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                toggleFavorite();
+                clickIgnore = true;
+                return false;
+            }
+        });
+    }
+
     public String getStopId()
     {
         return stopId;
@@ -168,5 +185,11 @@ public class BusStopCard extends RelativeLayout
     {
         favorite = !favorite;
         setFavoriteIcon();
+
+        if(favorite && !Global.isInFavorites(stopId))
+            Global.addFavorite(stopId,stopNameTextView.getText().toString());
+        else if (!favorite) Global.removeFavorite(stopId);
+
     }
+
 }
