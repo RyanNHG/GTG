@@ -3,5 +3,8 @@
 
     <string name="app_name">GTG</string>
     <string name="query_tooltip">Search here for bus stops...</string>
+    <string name="title_activity_bus">BusActivity</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
 
 </resources>

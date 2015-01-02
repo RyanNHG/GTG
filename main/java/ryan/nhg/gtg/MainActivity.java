@@ -1,6 +1,7 @@
 package ryan.nhg.gtg;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -104,6 +105,9 @@ public class MainActivity extends Activity
 
     public void tabClicked(View view)
     {
+        Intent intent = new Intent(this, BusActivity.class);
+        startActivity(intent);
+        /*
         ImageButton clickedTab = (ImageButton)view;
 
         //  Deselect selected tab
@@ -114,6 +118,7 @@ public class MainActivity extends Activity
 
         //  Select current tab
         selectTab();
+        */
 
     }
 

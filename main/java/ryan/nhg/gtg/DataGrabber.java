@@ -16,7 +16,6 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.net.URI;
 
 /**
  * Created by ryan on 12/25/14.
@@ -31,14 +30,19 @@ public class DataGrabber extends AsyncTask<String, Void, JSONObject>
                                 GET_QUICK_SEARCH_BUS_STOPS = 3;
     private int source;
 
-    private BusStopList list;
-    //private BusList list;
+    private BusStopList busStopList;
+    //private BusList busList;
 
-    public DataGrabber(BusStopList list)
+    public DataGrabber(BusStopList busStopList)
     {
-        this.list = list;
+        this.busStopList = busStopList;
     }
-
+/*
+    public DataGrabber(BusList busList)
+    {
+        this.busList = busList;
+    }
+*/
     private static JSONObject getBusStops(String query)
     {
         String url = "https://developer.cumtd.com/api/v2.2/json/GetStopsBySearch" +
@@ -75,9 +79,13 @@ public class DataGrabber extends AsyncTask<String, Void, JSONObject>
         return getJsonObject(url);
     }
 
-    private static JSONObject getBuses(String busStopId)
+    private static JSONObject getBuses(String stopId)
     {
-        return null;
+        String url = "https://developer.cumtd.com/api/v2.2/json/GetDeparturesByStop" +
+                "?key=" + MTD_API_KEY +
+                "&stop_id=" + stopId;
+
+        return getJsonObject(url);
     }
 
     private static JSONObject getJsonObject(String url)
@@ -158,7 +166,7 @@ public class DataGrabber extends AsyncTask<String, Void, JSONObject>
                 return getBusStops(query);
             case GET_BUSES_FOR_STOP:
                 String stop_id = params[1];
-                return null;
+                return getBuses(stop_id);
             case GET_QUICK_SEARCH_BUS_STOPS:
                 String quick_query = params[1];
                 if(quick_query.equals("")) return null;
@@ -176,10 +184,10 @@ public class DataGrabber extends AsyncTask<String, Void, JSONObject>
 
         switch(source)
         {
-            case GET_BUSES_FOR_STOP:
-                return;
+            //case GET_BUSES_FOR_STOP:
+              //  busList.addStops(obj);
             default:
-                list.addStops(obj,source);
+                busStopList.addStops(obj,source);
         }
 
     }
