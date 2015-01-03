@@ -2,6 +2,7 @@ package ryan.nhg.gtg;
 
 import android.os.AsyncTask;
 import android.util.JsonReader;
+import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -31,18 +32,18 @@ public class DataGrabber extends AsyncTask<String, Void, JSONObject>
     private int source;
 
     private BusStopList busStopList;
-    //private BusList busList;
+    private BusList busList;
 
     public DataGrabber(BusStopList busStopList)
     {
         this.busStopList = busStopList;
     }
-/*
+
     public DataGrabber(BusList busList)
     {
         this.busList = busList;
     }
-*/
+
     private static JSONObject getBusStops(String query)
     {
         String url = "https://developer.cumtd.com/api/v2.2/json/GetStopsBySearch" +
@@ -184,8 +185,9 @@ public class DataGrabber extends AsyncTask<String, Void, JSONObject>
 
         switch(source)
         {
-            //case GET_BUSES_FOR_STOP:
-              //  busList.addStops(obj);
+            case GET_BUSES_FOR_STOP:
+                busList.addStops(obj);
+                return;
             default:
                 busStopList.addStops(obj,source);
         }

@@ -3,6 +3,7 @@ package ryan.nhg.gtg;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Build;
 import android.view.View;
@@ -24,14 +25,14 @@ public class BusCard extends RelativeLayout
     private TextView busNameTextView, etaTextView;
 
 
-    public BusCard(Context context, int colorId, String busName, String eta)
+    public BusCard(Context context, String color, String busName, String eta)
     {
         super(context);
 
         this.context = context;
 
         setProperties();
-        initViews(colorId,busName,eta);
+        initViews(color,busName,eta);
 
         //  Should a bus stop do something on click?
         //     Details of bus location on map? Pro version?
@@ -52,7 +53,7 @@ public class BusCard extends RelativeLayout
 
     }
 
-    private void initViews(int colorId, String stopName, String eta)
+    private void initViews(String color, String busName, String eta)
     {
         //  Initialize views
         colorImageView = new ImageView(context);
@@ -60,8 +61,8 @@ public class BusCard extends RelativeLayout
         etaTextView = new TextView(context);
 
         //  Set properties of views
-        initColor(colorId);
-        initBusName(stopName);
+        initColor(color);
+        initBusName(busName);
         initEta(eta);
 
         //  Add views
@@ -71,7 +72,7 @@ public class BusCard extends RelativeLayout
 
     }
 
-    private void initColor(int colorId)
+    private void initColor(String color)
     {
         //  Set layout
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
@@ -82,14 +83,14 @@ public class BusCard extends RelativeLayout
         int margin = (int)getResources().getDimension(R.dimen.activity_vertical_margin);
         params.setMargins(margin,margin,margin,margin);
         colorImageView.setLayoutParams(params);
-        colorImageView.setId(1);
+        colorImageView.setId(3);
 
         //  Set color and image
-        colorImageView.setBackground(getResources().getDrawable(colorId));
+        colorImageView.setBackgroundColor(Color.parseColor("#"+color));
 
     }
 
-    private void initBusName(String stopName)
+    private void initBusName(String busName)
     {
         //  Set layout
         RelativeLayout.LayoutParams params = new LayoutParams(
@@ -98,11 +99,11 @@ public class BusCard extends RelativeLayout
         params.addRule(RelativeLayout.ALIGN_TOP,colorImageView.getId());
         params.addRule(RelativeLayout.RIGHT_OF,colorImageView.getId());
         busNameTextView.setLayoutParams(params);
-        busNameTextView.setId(2);
+        busNameTextView.setId(4);
 
         //  Set text
         busNameTextView.setTextAppearance(context,R.style.Base_TextAppearance_AppCompat_Large);
-        busNameTextView.setText(stopName);
+        busNameTextView.setText(busName);
     }
 
     private void initEta(String eta)
@@ -114,12 +115,12 @@ public class BusCard extends RelativeLayout
         params.addRule(RelativeLayout.ALIGN_LEFT, busNameTextView.getId());
         params.addRule(RelativeLayout.ALIGN_START,busNameTextView.getId());
         params.addRule(RelativeLayout.BELOW,busNameTextView.getId());
-        busNameTextView.setLayoutParams(params);
+        etaTextView.setLayoutParams(params);
 
         //  Set text
-        busNameTextView.setTextColor(getResources().getColorStateList(R.color.abc_secondary_text_material_light));
-        busNameTextView.setTextAppearance(context,R.style.Base_TextAppearance_AppCompat_Large);
-        busNameTextView.setText(eta);
+        etaTextView.setTextColor(getResources().getColorStateList(R.color.abc_secondary_text_material_light));
+        etaTextView.setTextAppearance(context,R.style.Base_TextAppearance_AppCompat_Large);
+        etaTextView.setText(eta);
     }
 
 }

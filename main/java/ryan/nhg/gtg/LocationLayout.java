@@ -58,7 +58,6 @@ public class LocationLayout extends LinearLayout implements Layout
 
     public void close()
     {
-
     }
 
     public void open()

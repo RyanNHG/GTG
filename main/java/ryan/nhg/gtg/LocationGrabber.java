@@ -33,7 +33,7 @@ public class LocationGrabber implements LocationListener
             locationLayout.locationReady();
             System.out.println("Location: [" + Global.latitude + ", " + Global.longitude +"]");
         }
-        else Toast.makeText(context, "Could not acquire location.", Toast.LENGTH_SHORT);
+        else Toast.makeText(context, "Could not acquire location.", Toast.LENGTH_SHORT).show();
     }
 
     @Override

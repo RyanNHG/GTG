@@ -1,6 +1,7 @@
 package ryan.nhg.gtg;
 
 import android.content.Context;
+import android.widget.Toast;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -13,6 +14,9 @@ import java.io.ObjectOutputStream;
  */
 public class Global
 {
+    //  CONTEXT
+    public static Context context;
+
     //  LOCATION
     public static double latitude;
     public static double longitude;
@@ -45,8 +49,22 @@ public class Global
         }
 
         recentStops[recent_index] = new BusStop(stopId,stopName);
+
+        removeOtherRecentStops(recent_index,stopId);
+
         recent_index = (recent_index+1)%MAX_RECENT_STOPS;
 
+    }
+
+    private static void removeOtherRecentStops(int indexToAvoid, String stopid)
+    {
+        for(int i = 0; i < MAX_RECENT_STOPS; i++)
+        {
+            BusStop stop = recentStops[i];
+
+            if (i != indexToAvoid && stop != null && (stop.stopId.equals(stopid)))
+                recentStops[i] = null;
+        }
     }
 
     public static BusStop[] getRecentStops()
@@ -81,7 +99,7 @@ public class Global
         if(favorites==null) return false;
 
         for(int i = 0; i < favorites.length; i++)
-            if(favorites[i] != null && favorites[i].stopId == stopId)
+            if(favorites[i] != null && favorites[i].stopId.equals(stopId))
                 return true;
 
         return false;
@@ -107,6 +125,8 @@ public class Global
                 {
                     favorites[i] = new BusStop(stopId, stopName);
                     num_favorites++;
+                    Toast.makeText(context, stopName + " added to favorites!", Toast.LENGTH_SHORT).show();
+
                     return;
                 }
         }
@@ -117,8 +137,9 @@ public class Global
         if(favorites==null) return;
 
         for(int i = 0; i < favorites.length; i++)
-            if(favorites[i] != null && favorites[i].stopId == stopId)
+            if(favorites[i] != null && favorites[i].stopId.equals(stopId))
             {
+                Toast.makeText(context, favorites[i].stopName + " removed from favorites!", Toast.LENGTH_SHORT).show();
                 favorites[i] = null;
                 num_favorites--;
             }

@@ -50,10 +50,10 @@ public class FavoriteLayout extends LinearLayout implements Layout
         //  TO-DO: Add card that tells user how to add favorites.
         if(stops==null || stops.length < 1) return;
 
-        for(int i = 0; i < stops.length; i++)
+        for(BusStop stop : stops)
         {
-            if(stops[i] == null) return;
-            busStopList.addCard(stops[i].stopName,"",stops[i].stopId,Global.isInFavorites(stops[i].stopId));
+            if (stop != null)
+                busStopList.addCard(stop.stopName, "", stop.stopId, Global.isInFavorites(stop.stopId));
         }
     }
 

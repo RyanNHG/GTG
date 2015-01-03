@@ -2,6 +2,7 @@ package ryan.nhg.gtg;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.PorterDuff;
 import android.os.Build;
@@ -10,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Created by ryan on 12/24/14.
@@ -156,8 +158,19 @@ public class BusStopCard extends RelativeLayout
             public void onClick(View v) {
                 if(clickIgnore)
                     clickIgnore = false;
-                else if(stopId != null)
-                    Global.addRecentStop(stopId,stopNameTextView.getText().toString());
+                else if(stopId != null) {
+
+                    //  Add bus stop to recent stops
+                    Global.addRecentStop(stopId, stopNameTextView.getText().toString());
+
+                    //  Launch bus activity to display buses for stop
+                    Intent intent = new Intent(context, BusActivity.class);
+
+                    intent.putExtra("stop_name",stopNameTextView.getText().toString());
+                    intent.putExtra("stop_id",stopId);
+
+                    context.startActivity(intent);
+                }
             }
         });
 
@@ -187,8 +200,13 @@ public class BusStopCard extends RelativeLayout
         setFavoriteIcon();
 
         if(favorite && !Global.isInFavorites(stopId))
-            Global.addFavorite(stopId,stopNameTextView.getText().toString());
-        else if (!favorite) Global.removeFavorite(stopId);
+        {
+            Global.addFavorite(stopId, stopNameTextView.getText().toString());
+        }
+        else if (!favorite)
+        {
+            Global.removeFavorite(stopId);
+        }
 
     }
 

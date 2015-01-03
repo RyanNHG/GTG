@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -37,8 +40,10 @@ public class MainActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Global.context = this;
+
         initLayouts();
-        //initLocation();
+        initLocation();
         initTabs();
     }
 
@@ -105,9 +110,7 @@ public class MainActivity extends Activity
 
     public void tabClicked(View view)
     {
-        Intent intent = new Intent(this, BusActivity.class);
-        startActivity(intent);
-        /*
+        //  Get clicked tab
         ImageButton clickedTab = (ImageButton)view;
 
         //  Deselect selected tab
@@ -118,7 +121,6 @@ public class MainActivity extends Activity
 
         //  Select current tab
         selectTab();
-        */
 
     }
 
@@ -162,4 +164,6 @@ public class MainActivity extends Activity
             locationGrabber.startLocationManager();
         Global.loadStops(this);
     }
+
+
 }
