@@ -1,12 +1,9 @@
 package ryan.nhg.gtg;
 
 import android.content.Context;
-import android.graphics.drawable.GradientDrawable;
-import android.provider.ContactsContract;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;

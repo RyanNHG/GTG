@@ -62,7 +62,6 @@ public class DataGrabber extends AsyncTask<String, Void, JSONObject>
         JSONObject obj = new JSONObject();
         try {
             obj.put("stops",array);
-            System.out.println(obj.toString());
             return obj;
         } catch (JSONException e) {
             e.printStackTrace();

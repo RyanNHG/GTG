@@ -1,12 +1,7 @@
 package ryan.nhg.gtg;
 
-import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.os.Build;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -102,7 +97,8 @@ public class BusCard extends RelativeLayout
         busNameTextView.setId(4);
 
         //  Set text
-        busNameTextView.setTextAppearance(context,R.style.Base_TextAppearance_AppCompat_Large);
+        busNameTextView.setTextAppearance(context,R.style.Base_TextAppearance_AppCompat_Medium);
+        busNameTextView.setTextColor(getResources().getColorStateList(R.color.black));
         busNameTextView.setText(busName);
     }
 
@@ -118,8 +114,8 @@ public class BusCard extends RelativeLayout
         etaTextView.setLayoutParams(params);
 
         //  Set text
-        etaTextView.setTextColor(getResources().getColorStateList(R.color.abc_secondary_text_material_light));
-        etaTextView.setTextAppearance(context,R.style.Base_TextAppearance_AppCompat_Large);
+        etaTextView.setTextAppearance(context,R.style.Base_TextAppearance_AppCompat_Small);
+        etaTextView.setTextColor(getResources().getColorStateList(R.color.secondary_text_default_material_light));
         etaTextView.setText(eta);
     }
 

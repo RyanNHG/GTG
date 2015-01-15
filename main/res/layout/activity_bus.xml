@@ -25,20 +25,14 @@
             android:layout_weight="1"
             android:background="@color/button_material_dark"
             android:clickable="true"
-            android:onClick="backClicked"/>
-
-        <ImageView
-            android:layout_width="1dp"
-            android:layout_height="fill_parent"
-            android:background="@color/secondary_text_default_material_light"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:onClick="backClicked"
             android:layout_marginRight="@dimen/activity_horizontal_margin" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:id="@+id/btn_label"
-            android:layout_weight="11"
+            android:layout_weight="6"
             android:background="@color/button_material_dark"
             android:clickable="false"
             android:text="Illini Union"

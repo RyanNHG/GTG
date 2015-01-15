@@ -1,21 +1,17 @@
 package ryan.nhg.gtg;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.ColorStateList;
-import android.graphics.PorterDuff;
-import android.os.Build;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 /**
  * Created by ryan on 12/24/14.
  */
+
 public class BusStopCard extends RelativeLayout
 {
     //  CONTEXT
@@ -67,15 +63,15 @@ public class BusStopCard extends RelativeLayout
 
         //  Set properties of views
         initColor(colorId);
+        initFavorite();
         initStopName(stopName);
         initDistance(distance);
-        initFavorite();
 
         //  Add views
         this.addView(colorImageView);
+        this.addView(favoriteImageView);
         this.addView(stopNameTextView);
         this.addView(distanceTextView);
-        this.addView(favoriteImageView);
 
     }
 
@@ -102,11 +98,12 @@ public class BusStopCard extends RelativeLayout
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
-        params.setMargins(0,0,(int)getResources().getDimension(R.dimen.activity_horizontal_margin),0);
+        params.setMargins(0, 0, (int) getResources().getDimension(R.dimen.activity_horizontal_margin), 0);
         params.addRule(RelativeLayout.CENTER_VERTICAL);
         params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
         params.addRule(RelativeLayout.ALIGN_PARENT_END);
         favoriteImageView.setLayoutParams(params);
+        favoriteImageView.setId(2);
 
         //  Set appropriate icon
         setFavoriteIcon();
@@ -126,11 +123,13 @@ public class BusStopCard extends RelativeLayout
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         params.addRule(RelativeLayout.ALIGN_TOP,colorImageView.getId());
         params.addRule(RelativeLayout.RIGHT_OF,colorImageView.getId());
+        params.addRule(RelativeLayout.LEFT_OF,favoriteImageView.getId());
         stopNameTextView.setLayoutParams(params);
-        stopNameTextView.setId(2);
+        stopNameTextView.setId(3);
 
         //  Set text
-        stopNameTextView.setTextAppearance(context,R.style.Base_TextAppearance_AppCompat_Large);
+        stopNameTextView.setTextAppearance(context,R.style.TextAppearance_AppCompat_Medium);
+        stopNameTextView.setTextColor(getResources().getColorStateList(R.color.black));
         stopNameTextView.setText(stopName);
     }
 
@@ -146,8 +145,8 @@ public class BusStopCard extends RelativeLayout
         distanceTextView.setLayoutParams(params);
 
         //  Set text
-        distanceTextView.setTextColor(getResources().getColorStateList(R.color.abc_secondary_text_material_light));
-        distanceTextView.setTextAppearance(context,R.style.Base_TextAppearance_AppCompat_Large);
+        distanceTextView.setTextAppearance(context,R.style.Base_TextAppearance_AppCompat_Small);
+        distanceTextView.setTextColor(getResources().getColorStateList(R.color.secondary_text_default_material_light));
         distanceTextView.setText(distance);
     }
 
@@ -187,11 +186,6 @@ public class BusStopCard extends RelativeLayout
     public String getStopId()
     {
         return stopId;
-    }
-
-    public boolean getFavorite()
-    {
-        return favorite;
     }
 
     public void toggleFavorite()

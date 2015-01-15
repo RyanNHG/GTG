@@ -2,36 +2,26 @@ package ryan.nhg.gtg;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.Toast;
-
-import java.util.PriorityQueue;
 
 
 public class MainActivity extends Activity
 {
 
     //  LAYOUTS
-    private static final int    LAYOUT_LOCATION = 0,
-                                LAYOUT_SEARCH = 1,
-                                LAYOUT_RECENT = 2,
-                                LAYOUT_FAVORITE = 3;
     private LinearLayout[] layouts;
     private LinearLayout layout_main;
 
-    //  LOCATION
-    private LocationGrabber locationGrabber;
-
     //  TABS
-    private static final int INITIAL_TAB = R.id.tab_location;
     private int currentTab;
+    private int[] tabs;
 
 
     @Override
@@ -43,8 +33,8 @@ public class MainActivity extends Activity
         Global.context = this;
 
         initLayouts();
-        initLocation();
         initTabs();
+
     }
 
     //  LAYOUTS
@@ -53,24 +43,15 @@ public class MainActivity extends Activity
         layout_main = (LinearLayout)findViewById(R.id.layout_main);
 
         layouts = new LinearLayout[4];
-        layouts[LAYOUT_LOCATION] = new LocationLayout(this);
-        layouts[LAYOUT_SEARCH] = new SearchLayout(this);
-        layouts[LAYOUT_RECENT] = new RecentLayout(this);
-        layouts[LAYOUT_FAVORITE] = new FavoriteLayout(this);
+        layouts[Global.LAYOUT_LOCATION] = new LocationLayout(this);
+        layouts[Global.LAYOUT_SEARCH] = new SearchLayout(this);
+        layouts[Global.LAYOUT_RECENT] = new RecentLayout(this);
+        layouts[Global.LAYOUT_FAVORITE] = new FavoriteLayout(this);
     }
 
     private void openLayout()
     {
-        LinearLayout layout;
-
-        if(currentTab == R.id.tab_search)
-            layout=layouts[LAYOUT_SEARCH];
-        else if(currentTab == R.id.tab_recent)
-            layout=layouts[LAYOUT_RECENT];
-        else if(currentTab == R.id.tab_favorite)
-            layout=layouts[LAYOUT_FAVORITE];
-        else
-            layout=layouts[LAYOUT_LOCATION];
+        LinearLayout layout = layouts[currentTab];
 
         layout_main.addView(layout);
         ((Layout)layout).open();
@@ -78,16 +59,7 @@ public class MainActivity extends Activity
 
     private void closeLayout()
     {
-        LinearLayout layout;
-
-        if(currentTab == R.id.tab_search)
-            layout=layouts[LAYOUT_SEARCH];
-        else if(currentTab == R.id.tab_recent)
-            layout=layouts[LAYOUT_RECENT];
-        else if(currentTab == R.id.tab_favorite)
-            layout=layouts[LAYOUT_FAVORITE];
-        else
-            layout=layouts[LAYOUT_LOCATION];
+        LinearLayout layout = layouts[currentTab];
 
         layout_main.removeView(layout);
         ((Layout)layout).close();
@@ -97,15 +69,14 @@ public class MainActivity extends Activity
 
     private void initLocation()
     {
-        locationGrabber = new LocationGrabber(this,(LocationLayout)layouts[LAYOUT_LOCATION]);
+        Global.locationGrabber = new LocationGrabber(this,(LocationLayout)layouts[Global.LAYOUT_LOCATION]);
     }
 
     //  TABS
 
     private void initTabs()
     {
-        currentTab = INITIAL_TAB;
-        selectTab();
+        tabs = new int[]{R.id.tab_location,R.id.tab_search,R.id.tab_recent,R.id.tab_favorite};
     }
 
     public void tabClicked(View view)
@@ -117,7 +88,11 @@ public class MainActivity extends Activity
         deselectTab();
 
         //  Set clicked tab
-        currentTab = clickedTab.getId();
+        int tab_id = clickedTab.getId();
+
+        for(int i = 0; i < tabs.length; i++)
+            if(tabs[i] == tab_id)
+                currentTab = i;
 
         //  Select current tab
         selectTab();
@@ -127,7 +102,7 @@ public class MainActivity extends Activity
     private void selectTab()
     {
         //  Get ImageButton from ID
-        ImageButton tab = (ImageButton)findViewById(currentTab);
+        ImageButton tab = (ImageButton)findViewById(tabs[currentTab]);
 
         //  Highlight icon
         tab.setBackground(getResources().getDrawable(R.color.button_material_dark));
@@ -139,7 +114,7 @@ public class MainActivity extends Activity
     private void deselectTab()
     {
         //  Get ImageButton from ID
-        ImageButton tab = (ImageButton)findViewById(currentTab);
+        ImageButton tab = (ImageButton)findViewById(tabs[currentTab]);
 
         //  Un-highlight icon
         tab.setBackground(getResources().getDrawable(R.color.button_material_light));
@@ -152,18 +127,42 @@ public class MainActivity extends Activity
     @Override
     protected void onStop() {
         super.onStop();
-        if(locationGrabber!=null)
-            locationGrabber.stopLocationManager();
-        Global.saveStops(this);
+        if(Global.locationGrabber!=null)
+            Global.locationGrabber.stopLocationManager();
+        Global.save();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if(locationGrabber!=null)
-            locationGrabber.startLocationManager();
-        Global.loadStops(this);
+        Global.load();
+
+        if(Global.getLocationOnAppLaunch && Global.locationGrabber==null)
+            initLocation();
+
+        deselectTab();
+        currentTab = Global.defaultTab;
+        selectTab();
+
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
 
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        switch(item.getItemId())
+        {
+            case R.id.item_settings:
+                startActivity(new Intent(this, SettingsActivity.class));
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
+    }
 }

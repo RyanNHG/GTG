@@ -17,9 +17,16 @@ public class Global
     //  CONTEXT
     public static Context context;
 
+    //  LAYOUTS
+    public static final int     LAYOUT_LOCATION = 0,
+                                LAYOUT_SEARCH = 1,
+                                LAYOUT_RECENT = 2,
+                                LAYOUT_FAVORITE = 3;
+
     //  LOCATION
     public static double latitude;
     public static double longitude;
+    public static LocationGrabber locationGrabber;
 
     //  RECENT STOPS
     private static BusStop[] recentStops;
@@ -31,11 +38,17 @@ public class Global
     private static int num_favorites;
     public static final int MAX_FAVORITE_STOPS = 10;
 
+    //  SETTINGS
+    public static int defaultTab;
+    public static boolean getLocationOnAppLaunch;
+
     //  SAVING/ LOADING
-    private static String RECENT_STOPS_FILENAME = "recent.dat",
+    private static String   RECENT_STOPS_FILENAME = "recent.dat",
                             RECENT_INDEX_FILENAME = "index.dat",
                             FAVORITES_FILENAME = "favorites.dat",
-                            NUM_FAVORITES_FILENAME = "num_favorites.dat";
+                            NUM_FAVORITES_FILENAME = "num_favorites.dat",
+                            DEFAULT_TAB = "default_tab.dat",
+                            LOCATION_PREF = "location_pref.dat";
 
 
     //  RECENT STOPS
@@ -146,7 +159,7 @@ public class Global
 
     }
 
-    public static void saveStops(Context context)
+    public static void save()
     {
         try {
             FileOutputStream fos = context.openFileOutput(RECENT_STOPS_FILENAME, Context.MODE_PRIVATE);
@@ -164,10 +177,19 @@ public class Global
             os.writeObject(favorites);
             os.close();
 
-
             fos = context.openFileOutput(NUM_FAVORITES_FILENAME, Context.MODE_PRIVATE);
             os = new ObjectOutputStream(fos);
             os.writeObject(num_favorites);
+            os.close();
+
+            fos = context.openFileOutput(DEFAULT_TAB, Context.MODE_PRIVATE);
+            os = new ObjectOutputStream(fos);
+            os.writeObject(defaultTab);
+            os.close();
+
+            fos = context.openFileOutput(LOCATION_PREF, Context.MODE_PRIVATE);
+            os = new ObjectOutputStream(fos);
+            os.writeObject(getLocationOnAppLaunch);
             os.close();
 
         } catch (IOException e) {
@@ -175,7 +197,7 @@ public class Global
         }
     }
 
-    public static void loadStops(Context context)
+    public static void load()
     {
         try {
             FileInputStream fis = context.openFileInput(RECENT_STOPS_FILENAME);
@@ -198,9 +220,20 @@ public class Global
             num_favorites = (int) is.readObject();
             is.close();
 
+            fis = context.openFileInput(DEFAULT_TAB);
+            is = new ObjectInputStream(fis);
+            defaultTab = (int) is.readObject();
+            is.close();
+
+            fis = context.openFileInput(LOCATION_PREF);
+            is = new ObjectInputStream(fis);
+            getLocationOnAppLaunch = (boolean) is.readObject();
+            is.close();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
 
 }

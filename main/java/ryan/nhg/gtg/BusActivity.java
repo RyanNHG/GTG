@@ -58,6 +58,32 @@ public class BusActivity extends Activity
         this.finish();
     }
 
+    @Override
+    public boolean onMenuOpened(int featureId, Menu menu)
+    {
+        menu.close();
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
+        return true;
+    }
 
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        switch(item.getItemId())
+        {
+            case R.id.item_settings:
+                startActivity(new Intent(this, SettingsActivity.class));
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
+    }
 
 }
