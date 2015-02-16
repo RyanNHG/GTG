@@ -22,7 +22,7 @@
             android:layout_height="fill_parent"
             android:id="@+id/tab_back"
             android:src="@drawable/icon_back"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:background="@color/button_material_dark"
             android:clickable="true"
             android:onClick="backClicked"
@@ -32,12 +32,22 @@
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:id="@+id/btn_label"
-            android:layout_weight="6"
+            android:layout_weight="7"
             android:background="@color/button_material_dark"
             android:clickable="false"
             android:text="Illini Union"
             android:textColor="@color/primary_text_default_material_dark"
             android:enabled="false" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:id="@+id/tab_refresh"
+            android:src="@drawable/icon_refresh"
+            android:layout_weight="1"
+            android:background="@color/button_material_dark"
+            android:clickable="true"
+            android:onClick="refreshClicked" />
 
 
     </LinearLayout>

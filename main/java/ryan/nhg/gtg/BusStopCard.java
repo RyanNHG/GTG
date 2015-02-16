@@ -173,6 +173,16 @@ public class BusStopCard extends RelativeLayout
             }
         });
 
+        favoriteImageView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(clickIgnore)
+                    clickIgnore = false;
+
+                toggleFavorite();
+            }
+        });
+
         this.setOnLongClickListener(new OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {

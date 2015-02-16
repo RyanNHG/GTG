@@ -5,4 +5,5 @@
         android:id="@+id/item_settings"
         android:title="Settings"
     />
+
 </menu>

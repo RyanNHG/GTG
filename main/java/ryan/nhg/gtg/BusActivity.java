@@ -9,6 +9,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.Toast;
+
+import java.util.Calendar;
 
 
 public class BusActivity extends Activity
@@ -16,6 +19,7 @@ public class BusActivity extends Activity
 
     //  LAYOUTS
     private BusList list;
+    private String stopId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -27,7 +31,8 @@ public class BusActivity extends Activity
 
         initLayouts();
         setTitle(intent.getStringExtra("stop_name"));
-        getBuses(intent.getStringExtra("stop_id"));
+        stopId = intent.getStringExtra("stop_id");
+        getBuses(stopId);
 
     }
 
@@ -58,13 +63,21 @@ public class BusActivity extends Activity
         this.finish();
     }
 
-    @Override
-    public boolean onMenuOpened(int featureId, Menu menu)
+    public void refreshClicked(View v)
     {
-        menu.close();
-        Intent intent = new Intent(this, SettingsActivity.class);
-        startActivity(intent);
-        return true;
+        getBuses(stopId);
+
+        Calendar c = Calendar.getInstance();
+        int hours = c.get(Calendar.HOUR);
+        int minutes = c.get(Calendar.MINUTE);
+        int am_pm = c.get(Calendar.AM_PM);
+        String str;
+
+        if(am_pm == Calendar.AM)
+            str = "Bus stops loaded at " + hours + ":" + minutes + " AM";
+        else str = "Bus stops loaded at " + hours + ":" + minutes + " PM";
+
+        Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
