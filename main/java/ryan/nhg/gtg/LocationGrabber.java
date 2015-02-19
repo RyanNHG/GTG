@@ -6,6 +6,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 /**
@@ -13,30 +14,96 @@ import android.widget.Toast;
  */
 public class LocationGrabber implements LocationListener
 {
-    private LocationManager lm;
+    private LocationManager locationManager;
     private Context context;
     private LocationLayout locationLayout;
-    private Toast toast;
+
+    boolean isGPSEnabled = false;
+    boolean isNetworkEnabled = false;
+    boolean canGetLocation = false;
+
+    // The minimum distance to change Updates in meters
+    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10; // 10 meters
+    private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1; // 1 minute
+
 
     public LocationGrabber(Context context, LocationLayout locationLayout)
     {
         this.context = context;
         this.locationLayout = locationLayout;
-        startLocationManager();
+    }
+
+    public void getLocation()
+    {
+        Location location = null;
+
+        try
+        {
+            locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+
+            // getting GPS status
+            isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+
+            // getting network status
+            isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+
+            if (!isGPSEnabled && !isNetworkEnabled)
+            {
+                Toast.makeText(context, "Please enable location on your device.", Toast.LENGTH_SHORT).show();
+            }
+            else
+            {
+                this.canGetLocation = true;
+                // First get location from Network Provider
+                if (isNetworkEnabled)
+                {
+                    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,MIN_TIME_BW_UPDATES,MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
+
+                    if (locationManager != null)
+                    {
+                        location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                        if (location != null)
+                        {
+                            Global.latitude = location.getLatitude();
+                            Global.longitude = location.getLongitude();
+
+                            Toast.makeText(context, "Location loaded at " + Global.getTimeString(), Toast.LENGTH_SHORT).show();
+                            locationLayout.locationReady();
+                        }
+                    }
+                }
+                // if GPS Enabled get lat/long using GPS Services
+                if (isGPSEnabled)
+                {
+                    if (location == null)
+                    {
+                        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,MIN_TIME_BW_UPDATES,MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
+
+                        if (locationManager != null)
+                        {
+                            location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                            if (location != null)
+                            {
+                                Global.latitude = location.getLatitude();
+                                Global.longitude = location.getLongitude();
+
+                                Toast.makeText(context, "Location loaded at " + Global.getTimeString(), Toast.LENGTH_SHORT).show();
+                                locationLayout.locationReady();
+                            }
+                        }
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void onLocationChanged(Location location)
     {
-        if(location != null) {
-            Global.latitude = location.getLatitude();
-            Global.longitude = location.getLongitude();
 
-            locationLayout.locationReady();
-            if(toast!=null)toast.cancel();
-            stopLocationManager();
-        }
-        else Toast.makeText(context, "Could not acquire location.", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -59,30 +126,13 @@ public class LocationGrabber implements LocationListener
 
     public void stopLocationManager()
     {
-        lm.removeUpdates(this);
+        if(locationManager != null){
+            locationManager.removeUpdates(this);
+        }
     }
 
     public void startLocationManager()
     {
-
-        lm = (LocationManager)context.getSystemService(Context.LOCATION_SERVICE);
-
-        String bestProvider = lm.getBestProvider(new Criteria(),false);
-
-        lm.requestLocationUpdates(bestProvider,1000*60,20,this);
-
-        Location location = lm.getLastKnownLocation(bestProvider);
-
-        try
-        {
-            Global.latitude = location.getLatitude();
-            Global.longitude = location.getLongitude();
-            locationLayout.locationReady();
-        }
-        catch (Exception e)
-        {
-            toast = Toast.makeText(context, "Looking for bus stops...",Toast.LENGTH_LONG);
-            toast.show();
-        }
+        getLocation();
     }
 }

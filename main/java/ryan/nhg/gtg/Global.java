@@ -8,6 +8,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.Calendar;
 
 /**
  * Created by ryan on 12/25/14.
@@ -235,5 +236,20 @@ public class Global
         }
     }
 
+    //  MISC METHODS
+    public static String getTimeString()
+    {
+        Calendar c = Calendar.getInstance();
+        String hours = "" + c.get(Calendar.HOUR);
+        String minutes = "" + c.get(Calendar.MINUTE);
+        int am_pm = c.get(Calendar.AM_PM);
+
+        if(c.get(Calendar.MINUTE) < 10 )
+            minutes = "0" + minutes;
+
+        if(am_pm == Calendar.AM)
+            return "" + hours + ":" + minutes + " AM";
+        else return "" + hours + ":" + minutes + " PM";
+    }
 
 }

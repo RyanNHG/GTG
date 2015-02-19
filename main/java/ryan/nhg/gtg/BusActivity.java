@@ -11,9 +11,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import java.util.Calendar;
-
-
 public class BusActivity extends Activity
 {
 
@@ -56,6 +53,7 @@ public class BusActivity extends Activity
     private void getBuses(String stopId)
     {
         new DataGrabber(list).execute(""+DataGrabber.GET_BUSES_FOR_STOP,stopId);
+        Toast.makeText(this, "Bus stops loaded at " + Global.getTimeString(), Toast.LENGTH_SHORT).show();
     }
 
     public void backClicked(View v)
@@ -66,18 +64,6 @@ public class BusActivity extends Activity
     public void refreshClicked(View v)
     {
         getBuses(stopId);
-
-        Calendar c = Calendar.getInstance();
-        int hours = c.get(Calendar.HOUR);
-        int minutes = c.get(Calendar.MINUTE);
-        int am_pm = c.get(Calendar.AM_PM);
-        String str;
-
-        if(am_pm == Calendar.AM)
-            str = "Bus stops loaded at " + hours + ":" + minutes + " AM";
-        else str = "Bus stops loaded at " + hours + ":" + minutes + " PM";
-
-        Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {

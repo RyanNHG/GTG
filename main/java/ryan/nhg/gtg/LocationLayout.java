@@ -64,10 +64,12 @@ public class LocationLayout extends LinearLayout implements Layout
     {
         if(!Global.getLocationOnAppLaunch) {
             if (Global.locationGrabber == null)
+            {
                 Global.locationGrabber = new LocationGrabber(context, this);
+                Global.locationGrabber.startLocationManager();
+            }
             else
             {
-                Global.locationGrabber.stopLocationManager();
                 Global.locationGrabber.startLocationManager();
             }
         }

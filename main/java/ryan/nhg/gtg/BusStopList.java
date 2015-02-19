@@ -82,6 +82,7 @@ public class BusStopList extends ScrollView
 
         if(num_stops > 0)
             list.addView(new Space(context));
+
         busStops.add(num_stops, new BusStopCard(context, color, stopName, distance, stopId ,favorite));
         list.addView(busStops.get(num_stops));
 
@@ -124,7 +125,6 @@ public class BusStopList extends ScrollView
                             distance = distance.substring(0, 5) + " miles";
                     } else distance = "";
 
-                    //  TO-DO: Implement favorites.
                     addCard(stopName, distance, stopId, Global.isInFavorites(stopId));
                 }
             }
@@ -132,6 +132,7 @@ public class BusStopList extends ScrollView
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
     }
 
         private double calculateDistanceFrom(double lat, double lon)
@@ -158,6 +159,7 @@ public class BusStopList extends ScrollView
                 num_stops--;
             }
     }
+
     public void removeAll()
     {
         list.removeAllViews();

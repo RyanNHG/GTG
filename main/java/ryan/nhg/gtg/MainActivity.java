@@ -11,6 +11,8 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
+import java.io.Console;
+
 
 public class MainActivity extends Activity
 {
@@ -34,6 +36,7 @@ public class MainActivity extends Activity
 
         initLayouts();
         initTabs();
+        initLocation();
 
     }
 
@@ -125,8 +128,8 @@ public class MainActivity extends Activity
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onPause() {
+        super.onPause();
         if(Global.locationGrabber!=null)
             Global.locationGrabber.stopLocationManager();
         Global.save();
@@ -137,8 +140,8 @@ public class MainActivity extends Activity
         super.onResume();
         Global.load();
 
-        if(Global.getLocationOnAppLaunch && Global.locationGrabber==null)
-            initLocation();
+        if(Global.getLocationOnAppLaunch)
+            Global.locationGrabber.startLocationManager();
 
         deselectTab();
         currentTab = Global.defaultTab;
